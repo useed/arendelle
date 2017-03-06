@@ -33,12 +33,12 @@ Or install it yourself as:
 
   # Variables are frozen after initialization
   obj.user_settings["name"] = "New Name"
-    => "FrozenVariableError: Cannot modify frozen variable"
+    => FrozenVariableError: "Cannot modify frozen variable"
 
   # Values are frozen after being set
   name = obj.user_settings.name
   name << "Test"
-    => "RuntimeError: can't modify frozen String"
+    => RuntimeError: "can't modify frozen String"
     
   # We call these mostly frozen objects, because they aren't 100% immutable: they can have settings added, but not modified
   newobj = Arendelle.new(key1: "value1")
@@ -50,17 +50,18 @@ Or install it yourself as:
     => "value2"
 
   newobj["key1"] = "value3"
-    => "FrozenVariableError: Cannot modify frozen variable"
+    => FrozenVariableError: "Cannot modify frozen variable"
 ```
 
-
-```ruby
-# Snippet from our "real-world" use case. For us, this is a replacement for the SettingsLogic gem.
-
+```yaml
 # api_keys.yml
 defaults: &defaults
   cool_service:
     client_secret: <%= ENV["COOL_SERVICE_CLIENT_SECRET"] || "default_value" %>
+```
+
+```ruby
+# Snippet from our "real-world" use case. For us, this is a replacement for the SettingsLogic gem.
 
 # settings.rb
 class Settings
