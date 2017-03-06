@@ -1,5 +1,5 @@
 class Arendelle
-  VERSION = 0.1
+  VERSION = "0.1.0"
 
   def initialize(**opts)
     opts.each { |k, v| self[k] = v }
