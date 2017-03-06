@@ -18,7 +18,7 @@ class Arendelle
 end
 
 class FrozenVariableError < StandardError
-  def message
-    "Cannot modify frozen variable"
+  def initialize(msg = "Cannot modify frozen variable")
+    super(msg)
   end
 end
