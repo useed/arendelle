@@ -1,10 +1,10 @@
 # Arendelle
 
-Arendelle is a small gem with a distantly semantic name, used for initializing mostly frozen objects. If you've got kids, you probably already understand.
+Arendelle is a small gem with a distantly semantic name, used for initializing mostly frozen objects. If you've got kids, you probably already understand the name.
 
 ## Why?
 
-We primarily use Arendelle in our innternal projects combined with JSON.parse and the `object_class` setting, to initialize (mostly) frozen objects. This helps prevent accidentally mutating the state of a parsed JSON file or configuration class, while providing a javascript object-like interface for accessing deeply nested settings. See usage for more details.
+We primarily use Arendelle in our internal projects combined with JSON.parse and the `object_class` setting, to initialize (mostly) frozen objects. This helps prevent accidentally mutating the state of a parsed JSON file or configuration class, while providing a javascript object-like interface for accessing deeply nested settings. See usage for more details.
 
 ## Installation
 
@@ -24,7 +24,39 @@ Or install it yourself as:
 
 ## Usage
 
+```ruby
+  json = '{"user_settings":{"name":"Rob"}}'
+  obj = JSON.parse(json, object_class: Arendelle)
+
+  obj.user_settings.name
+    => "Rob"
+
+  # Variables are frozen after initialization
+  obj.user_settings["name"] = "New Name"
+    => "FrozenVariableError: Cannot modify frozen variable"
+
+  # Values are frozen after being set
+  name = obj.user_settings.name
+  name << "Test"
+    => "RuntimeError: can't modify frozen String"
+    
+  # We call these mostly frozen objects, because they aren't 100% immutable: they can have settings added, but not modified
+  newobj = Arendelle.new(key1: "value1")
+  newobj.key1
+    => "value1"
+
+  newobj["key2"] = "value2"
+  newobj.key2
+    => "value2"
+
+  newobj["key1"] = "value3"
+    => "FrozenVariableError: Cannot modify frozen variable"
 ```
+
+
+```ruby
+# Snippet from our "real-world" use case. For us, this is a replacement for the SettingsLogic gem.
+
 # api_keys.yml
 defaults: &defaults
   cool_service:
@@ -48,7 +80,7 @@ class Settings
 end
 ```
 
-```
+```ruby
 Settings.cool_service.client_secret
   => "default_value" # assuming the ENV var isn't set
 ```
