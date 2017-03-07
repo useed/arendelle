@@ -4,7 +4,17 @@ Arendelle is a small gem with a distantly semantic name, used for initializing m
 
 ## Why?
 
-We primarily use Arendelle in our internal projects combined with JSON.parse and the `object_class` setting, to initialize (mostly) frozen objects. This helps prevent accidentally mutating the state of a parsed JSON file or configuration class, while providing a javascript object-like interface for accessing deeply nested settings. See usage for more details.
+There are a ton of great Struct-like libraries that focus on immutable values. Some (`ure`, for example) focus on performance and offer a similar interface to Struct for declaring dynamic classes. Others give you the full kitchen sink - featuring any type of object you need, with immutability built in.
+
+Our use case was very simple, and yet we found ourselves repeatedly reaching for the same code snippet across multiple projects. We wanted something that offers a simple interface for initializing objects when using JSON.parse (which relies on `[]=` as a setter) or something we could occasionally use as a simple set-it-and-forget-it type of simple PORO.
+
+So we built something lightweight, optimized for our current use case: `JSON.parse(json_string, object_class: Arendelle)`. When combined with JSON.parse it builds a clean javascript-object like interface for accessing deeply nested JSON, and for us, removed any concerns about "extra" things the code was doing.
+
+Take a look at the source for yourself: you probably don't need our help to write this gem. The surface area is incredibly small. But given the utility we've found using this lib, we figured it couldn't hurt to put it out there. So, here you go, Internet. Enjoy.
+
+**tl;dr**
+
+Arendelle helps prevent accidentally mutating the state of a parsed JSON file or configuration class, while providing a javascript object-like interface for accessing deeply nested settings (when used in conjunction with `JSON.parse`). See usage for more details.
 
 ## Installation
 
@@ -91,6 +101,12 @@ Settings.cool_service.client_secret
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+
+## Wishlist
+
+Currently, we're using this in conjunction with JSON.parse. In some situations, this is less than ideal, as we will rely on the recursive behavior of JSON.parse to ensure that each object is initialized appropriately - calling it as `JSON.parse({}.to_hash, object_class: Arendelle)` - which is one step too many.
+
+Adding a `.build_from_hash` type of class method which efficiently handles recursively transforming hash isn't something we need often, but would be a nice-to-have.
 
 ## Contributing
 
