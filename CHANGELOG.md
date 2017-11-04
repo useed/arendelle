@@ -1,3 +1,8 @@
+## [0.1.2] - 2017-11-03
+
+Added #to_h to allow conversion of objects to hashes, allowing for easier 
+testing via hash comparison.
+
 ## [0.1.1] - 2017-03-20
 
 Added support for handling JSON keys that start with integers. Previously this was attempting to use an invalid instance variable ("@1234"). New behavior prepends instance variables and method access calls with an underscore: `obj._1234` or `obj.instance_variable_get("_@1234")`.
