@@ -38,4 +38,30 @@ RSpec.describe Arendelle do
       end
     end
   end
+
+  describe "#to_h" do
+    it "should convert itself to a hash-like structure" do
+      obj = Arendelle.new(name: "First Name", other: "Sure")
+      data = { name: "First Name", other: "Sure" }
+      expect(obj.to_h).to eq data
+    end
+
+    it "should convert nested Arendelle instances" do
+      obj = Arendelle.new(
+        name: "First Name",
+        other: Arendelle.new(
+          nested: Arendelle.new(double_nested: "Double Nested")
+        )
+      )
+      data = {
+        name: "First Name",
+        other: {
+          nested: {
+            double_nested: "Double Nested"
+          }
+        }
+      }
+      expect(obj.to_h).to eq data
+    end
+  end
 end
